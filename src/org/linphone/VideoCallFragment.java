@@ -115,19 +115,28 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 						dy = (int) motionEvent.getY();
 						break;
 					case MotionEvent.ACTION_MOVE:
-						isMovied = true;
+						if (!isMovied){
+							isMovied = true;
 
-						RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCaptureView.getLayoutParams();
-						lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0); // Clears the rule, as there is no removeRule until API 17.
-						lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+							RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCaptureView.getLayoutParams();
+							lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0); // Clears the rule, as there is no removeRule until API 17.
+							lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+
+							view.setLayoutParams(lp);
+						}
 
 						int x = (int) motionEvent.getX();
 						int y = (int) motionEvent.getY();
-						int left = lp.leftMargin + (x - dx);
-						int top = lp.topMargin + (y - dy);
-						lp.leftMargin = left;
-						lp.topMargin = top;
-						view.setLayoutParams(lp);
+						int left = (int) (mCaptureView.getTranslationX() + (x - dx));
+						int top = (int) mCaptureView.getTranslationY() + (y - dy);
+
+						if (left > 0 && (left + mCaptureView.getWidth() < cameraCover.getWidth())) {
+							mCaptureView.setTranslationX(left);
+						}
+						if (top > 0 && (top + mCaptureView.getHeight() < cameraCover.getHeight())) {
+							mCaptureView.setTranslationY(top);
+						}
+
 						break;
 				}
 				return true;
@@ -272,29 +281,27 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 		preview.setZOrderMediaOverlay(true); // Needed to be able to display control layout over
 	}
 
-	public void animateDownSelfView(boolean isAnimationDisabled)
-	{
+	public void animateDownSelfView(boolean isAnimationDisabled) {
 		if(mCaptureView == null)
 			return;
 		if(!isAnimationDisabled) {
-			if (!isMovied && !selfViewDownAnimation.isRunning())
+			if (!isMovied && !selfViewDownAnimation.isRunning()) {
 				selfViewDownAnimation.start();
-		}
-		else
+			}
+		} else
 			mCaptureView.setTranslationY(selfViewTranslation);
 
 	}
 
-	public void animateUpSelfView(boolean isAnimationDisabled)
-	{
+	public void animateUpSelfView(boolean isAnimationDisabled) {
 		if(mCaptureView == null)
 			return;
 		if(!isAnimationDisabled) {
-			if (!isMovied && !selfViewUpAnimation.isRunning())
+			if (!isMovied && !selfViewUpAnimation.isRunning()) {
 				selfViewUpAnimation.start();
-			else
-				mCaptureView.setTranslationY(0);
-		}
+			}
+		} else
+			mCaptureView.setTranslationY(0);
 	}
 
 	public void switchCamera() {
