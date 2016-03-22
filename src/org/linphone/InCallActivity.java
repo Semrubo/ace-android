@@ -658,8 +658,6 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				enter_pressed=false;
 
-
-
 				if (s.length()>0 && s.subSequence(s.length()-1, s.length()).toString().equalsIgnoreCase("\n")) {
 					enter_pressed=true;
 				}
@@ -831,7 +829,9 @@ public class InCallActivity extends FragmentActivity implements OnClickListener 
 		runOnUiThread(new Runnable(){
 			public void run() {
 				if(rttHolder.getVisibility()!=View.VISIBLE){
-					showRTTinterface();
+					if (LinphoneManager.getLc().getCallsNb() == 1) {
+						showRTTinterface();
+					}
 				}
 				if(mControlsLayout.getVisibility()!= View.GONE)
 					hide_controls(0);
