@@ -293,10 +293,10 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	}
 
 	public void animateDownSelfView(boolean isAnimationDisabled) {
-		if(mCaptureView == null)
+		if(mCaptureView == null || isMovied)
 			return;
 		if(!isAnimationDisabled) {
-			if (!isMovied && !selfViewDownAnimation.isRunning()) {
+			if (!selfViewDownAnimation.isRunning()) {
 				selfViewDownAnimation.start();
 			}
 		} else
@@ -305,10 +305,10 @@ public class VideoCallFragment extends Fragment implements OnGestureListener, On
 	}
 
 	public void animateUpSelfView(boolean isAnimationDisabled) {
-		if(mCaptureView == null)
+		if(mCaptureView == null || isMovied)
 			return;
 		if(!isAnimationDisabled) {
-			if (!isMovied && !selfViewUpAnimation.isRunning()) {
+			if (!selfViewUpAnimation.isRunning()) {
 				selfViewUpAnimation.start();
 			}
 		} else
