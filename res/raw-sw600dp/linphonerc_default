@@ -9,6 +9,7 @@ use_ipv6=0
 keepalive_period=30000
 media_encryption=srtp
 dscp=24
+sip_random_port=1
 
 [video]
 size=cif
@@ -45,7 +46,6 @@ rate=90000
 enabled=1
 recv_fmtp=profile-level-id=42801F
 
-
 [video_codec_1]
 mime=H263
 rate=90000
@@ -56,4 +56,9 @@ recv_fmtp=CIF=1;QCIF=1
 mime=VP8
 rate=90000
 enabled=1
+
+[video_codec_3]
+mime=MP4V-ES
+rate=90000
+enabled=0
 

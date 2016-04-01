@@ -251,10 +251,12 @@
 			android:title="@string/pref_sipinfo_dtmf"
 			android:key="@string/pref_sipinfo_dtmf_key"/>
 
+
+			<!--VATRP-3143 remove duplicate auto-answer
 			<CheckBoxPreference
 				android:title="@string/pref_auto_answer"
 				android:key="@string/pref_auto_answer_key"/>
-
+			-->
 			<CheckBoxPreference
 				android:title="@string/pref_rfc2833_dtmf"
 			    android:key="@string/pref_rfc2833_dtmf_key"/>
@@ -375,16 +377,17 @@
 
 			<CheckBoxPreference
 				android:title="@string/pref_animation_enable_title"
-				android:key="@string/pref_animation_enable_key"/>
+				android:key="@string/pref_animation_enable_key"
+				android:defaultValue="false"/>
 
 			<CheckBoxPreference
 			    android:title="@string/pref_autostart"
 				android:key="@string/pref_autostart_key"
 				android:layout="@layout/hidden"/>
 
-			<CheckBoxPreference
-				android:title="@string/pref_auto_answer"
-				android:key="@string/pref_auto_answer_key"/>
+			<!--<CheckBoxPreference-->
+				<!--android:title="@string/pref_auto_answer"-->
+				<!--android:key="@string/pref_auto_answer_key"/>-->
 
 			<CheckBoxPreference
 				android:title="@string/pref_enable_packet_tagging"

@@ -21,6 +21,7 @@ package org.linphone;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,6 +35,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -290,10 +292,6 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 
 			@Override
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-				if(!displayChatMessageNotification(message.getFrom().asStringUriOnly())) {
-					cr.markAsRead();
-				}
-		        //displayMissedChats(getChatStorage().getUnreadMessageCount());
 		        if (messageListFragment != null && messageListFragment.isVisible()) {
 		            ((ChatListFragment) messageListFragment).refresh();
 		        }
@@ -1345,8 +1343,18 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 	}
 
 	public void exit() {
-		finish();
 		stopService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
+			exitApi16();
+		} else{
+			finish();
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void exitApi16(){
+		finishAffinity();
 	}
 
 	@Override
@@ -1823,8 +1831,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			final String tunnelGetMode = LC_Object_to_String(lc.tunnelGetMode());
 			final String tunnelGetServers = LC_Object_to_String(lc.tunnelGetServers());
 			final String tunnelSipEnabled = LC_Object_to_String(lc.tunnelSipEnabled());
-
-
+			final boolean HWAcellDecode = lc.getMSFactory().filterFromNameEnabled("MSMediaCodecH264Dec");
+			final boolean HWAcellEncode = lc.getMSFactory().filterFromNameEnabled("MSMediaCodecH264Enc");
 			final String CameraParameters = "--------Device Camera Stats---------";
 
 
@@ -1919,10 +1927,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			Log.d("tunnelGetMode,", tunnelGetMode);
 			Log.d("tunnelGetServers,", tunnelGetServers);
 			Log.d("tunnelSipEnabled,", tunnelSipEnabled);
-
+			Log.d("HWAccelDecode,", HWAcellDecode);
+			Log.d("HWAccelEncode,", HWAcellEncode);
 			Log.d("CameraParameters,", CameraParameters);
-
-
 			new Thread() {
 				public void run() {
 					try {
@@ -2033,6 +2040,8 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 						fw.append("tunnelGetMode," + tunnelGetMode + "\n");
 						fw.append("tunnelGetServers," + tunnelGetServers + "\n");
 						fw.append("tunnelSipEnabled," + tunnelSipEnabled + "\n");
+						fw.append("HWAccelDecode," + HWAcellDecode + "\n");
+						fw.append("HWAccelEncode,"+HWAcellEncode+"\n");
 						fw.append("CameraParameters," + CameraParameters + "\n");
 						fw.close();
 
@@ -2156,6 +2165,9 @@ public class LinphoneActivity extends FragmentActivity implements OnClickListene
 			stats_list.add("tunnelGetMode," + tunnelGetMode);
 			stats_list.add("tunnelGetServers," + tunnelGetServers);
 			stats_list.add("tunnelSipEnabled," + tunnelSipEnabled);
+			stats_list.add("HWAccelDecode,"+ HWAcellDecode);
+			stats_list.add("HWAccelEncode," + HWAcellEncode);
+
 			stats_list.add("CameraParameters," + CameraParameters);
 		}catch(Throwable e){
 			e.printStackTrace();
